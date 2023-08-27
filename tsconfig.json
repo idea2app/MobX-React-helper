@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "experimentalDecorators": true,
+        "lib": ["ES2023", "DOM", "DOM.Iterable"]
+    },
+    "include": ["src/*.ts", "src/test.tsx"],
+    "typedocOptions": {
+        "name": "MobX React helper",
+        "excludeExternals": true,
+        "excludePrivate": true,
+        "readme": "./ReadMe.md",
+        "plugin": ["typedoc-plugin-mdn-links"]
+    }
+}
