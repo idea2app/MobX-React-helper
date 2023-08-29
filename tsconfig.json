@@ -4,7 +4,7 @@
         "experimentalDecorators": true,
         "lib": ["ES2023", "DOM", "DOM.Iterable"]
     },
-    "include": ["src/*.ts", "src/test.tsx"],
+    "include": ["src/*"],
     "typedocOptions": {
         "name": "MobX React helper",
         "excludeExternals": true,

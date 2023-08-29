@@ -2,6 +2,7 @@
 
 [MobX][1] helper library for [React][2] component engine, with [TypeScript][3] Class & Decorator supports.
 
+[![MobX compatibility](https://img.shields.io/badge/Compatible-1?logo=mobx&label=MobX%204%2F5%2F6)][1]
 [![NPM Dependency](https://img.shields.io/librariesio/github/idea2app/MobX-React-helper.svg)][4]
 [![CI & CD](https://github.com/idea2app/MobX-React-helper/actions/workflows/main.yml/badge.svg)][5]
 

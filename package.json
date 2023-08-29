@@ -1,6 +1,6 @@
 {
     "name": "mobx-react-helper",
-    "version": "0.2.3",
+    "version": "0.2.5",
     "license": "LGPL-3.0-or-later",
     "author": "shiy2008@gmail.com",
     "description": "MobX helper library for React component engine, with TypeScript Class & Decorator supports.",
@@ -23,7 +23,6 @@
     },
     "source": "src/index.ts",
     "types": "dist/index.d.ts",
-    "module": "dist/index.esm.js",
     "main": "dist/index.js",
     "dependencies": {
         "@swc/helpers": "^0.5.1",
@@ -43,7 +42,7 @@
         "mobx": "^6.10.0",
         "open-cli": "^7.2.0",
         "parcel": "~2.9.3",
-        "prettier": "^3.0.2",
+        "prettier": "^3.0.3",
         "typedoc": "^0.25.0",
         "typedoc-plugin-mdn-links": "^3.1.0",
         "typescript": "~5.2.2"

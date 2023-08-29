@@ -5,7 +5,7 @@ import { ComponentClass } from 'react';
 /**
  * @see {@link https://github.com/mobxjs/mobx/blob/main/packages/mobx-react/README.md#note-on-using-props-and-state-in-derivations}
  */
-export function observePropsState<T extends ComponentClass>(
+export function observePropsState<T extends ComponentClass<any>>(
     ComponentBaseClass: T
 ) {
     class ObservedComponent extends (ComponentBaseClass as ComponentClass) {
