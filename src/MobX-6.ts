@@ -1,6 +1,17 @@
+import isEqualWith from 'lodash.isequalwith';
 import * as MobX from 'mobx';
-import eq from 'lodash.eq';
 import { ComponentClass } from 'react';
+
+/**
+ * @see {@link https://stackoverflow.com/a/73274579}
+ */
+export const isEqualProps = (a: any, b: any) =>
+    isEqualWith(
+        a,
+        b,
+        (a, b, key) =>
+            ['_owner', '$$typeof'].includes(key as string) || undefined
+    );
 
 /**
  * @see {@link https://github.com/mobxjs/mobx/blob/main/packages/mobx-react/README.md#note-on-using-props-and-state-in-derivations}
@@ -32,9 +43,11 @@ export function observePropsState<T extends ComponentClass<any>>(
             prevState: Readonly<InstanceType<ComponentClass>['state']>,
             snapshot?: any
         ) {
-            if (!eq(prevProps, this.props)) this.observedProps = this.props;
+            if (!isEqualProps(prevProps, this.props))
+                this.observedProps = this.props;
 
-            if (!eq(prevState, this.state)) this.observedState = this.state;
+            if (!isEqualProps(prevState, this.state))
+                this.observedState = this.state;
 
             super.componentDidUpdate?.(prevProps, prevState, snapshot);
         }

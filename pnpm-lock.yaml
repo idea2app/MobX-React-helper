@@ -8,9 +8,9 @@ dependencies:
   '@swc/helpers':
     specifier: ^0.5.1
     version: 0.5.1
-  lodash.eq:
-    specifier: ^4.0.0
-    version: 4.0.0
+  lodash.isequalwith:
+    specifier: ^4.4.0
+    version: 4.4.0
   react:
     specifier: '>=16'
     version: 18.2.0
@@ -22,9 +22,9 @@ devDependencies:
   '@parcel/transformer-typescript-types':
     specifier: ~2.9.3
     version: 2.9.3(@parcel/core@2.9.3)(typescript@5.2.2)
-  '@types/lodash.eq':
-    specifier: ^4.0.7
-    version: 4.0.7
+  '@types/lodash.isequalwith':
+    specifier: ^4.4.7
+    version: 4.4.7
   '@types/react':
     specifier: ^18.2.21
     version: 18.2.21
@@ -35,8 +35,8 @@ devDependencies:
     specifier: ^14.0.1
     version: 14.0.1
   mobx:
-    specifier: ^6.10.0
-    version: 6.10.0
+    specifier: ^6.10.2
+    version: 6.10.2
   open-cli:
     specifier: ^7.2.0
     version: 7.2.0
@@ -1171,8 +1171,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /@types/lodash.eq@4.0.7:
-    resolution: {integrity: sha512-Bcr/yycqGLScNQMFzZbM65Zm/MDYV+S9X0dSEYRkqzs/3AAyoCtG2XhvjjD4EQhxzn1Twt/E6o1nHf3wEp5Kmg==}
+  /@types/lodash.isequalwith@4.4.7:
+    resolution: {integrity: sha512-GdI984QbZw+LGAd3jcFIIhaMwhlVasTMIT3nmE1rOcACjyzp9J9VjTENVkl9aJLOiPZt6RYSJFVEEsRHKbdh3w==}
     dependencies:
       '@types/lodash': 4.14.197
     dev: true
@@ -2090,8 +2090,8 @@ packages:
       p-locate: 6.0.0
     dev: true
 
-  /lodash.eq@4.0.0:
-    resolution: {integrity: sha512-vbrJpXL6kQNG6TkInxX12DZRfuYVllSxhwYqjYB78g2zF3UI15nFO/0AgmZnZRnaQ38sZtjCiVjGr2rnKt4v0g==}
+  /lodash.isequalwith@4.4.0:
+    resolution: {integrity: sha512-dcZON0IalGBpRmJBmMkaoV7d3I80R2O+FrzsZyHdNSFrANq/cgDqKQNmAHE8UEj4+QYWwwhkQOVdLHiAopzlsQ==}
     dev: false
 
   /log-update@5.0.1:
@@ -2209,8 +2209,8 @@ packages:
       kind-of: 6.0.3
     dev: true
 
-  /mobx@6.10.0:
-    resolution: {integrity: sha512-WMbVpCMFtolbB8swQ5E2YRrU+Yu8iLozCVx3CdGjbBKlP7dFiCSuiG06uea3JCFN5DnvtAX7+G5Bp82e2xu0ww==}
+  /mobx@6.10.2:
+    resolution: {integrity: sha512-B1UGC3ieK3boCjnMEcZSwxqRDMdzX65H/8zOHbuTY8ZhvrIjTUoLRR2TP2bPqIgYRfb3+dUigu8yMZufNjn0LQ==}
     dev: true
 
   /ms@2.1.2:
