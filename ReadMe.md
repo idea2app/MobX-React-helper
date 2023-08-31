@@ -34,12 +34,49 @@ Compatible with MobX 4/5/6:
 }
 ```
 
+### Observable Props & State
+
+```tsx
+import { computed } from 'mobx';
+import { observer } from 'mobx-react';
+import { observePropsState } from 'mobx-react-helper';
+import { Component } from 'react';
+
+export interface MyComponentProps {
+    prefix: string;
+}
+
+interface State {
+    text: string;
+}
+
+@observer
+@observePropsState
+export class MyComponent extends Component<MyComponentProps, State> {
+    state: Readonly<State> = {
+        text: ''
+    };
+
+    declare observedProps: MyComponentProps;
+    declare observedState: State;
+
+    @computed
+    get decoratedText() {
+        return this.observedProps.prefix + this.observedState.text;
+    }
+
+    render() {
+        return <p>{this.decoratedText}</p>;
+    }
+}
+```
+
 ### Abstract Form component
 
 ```tsx
-import { ChangeEvent } from 'react';
 import { observer } from 'mobx-react';
 import { FormComponent, observePropsState } from 'mobx-react-helper';
+import { ChangeEvent } from 'react';
 
 @observer
 @observePropsState
