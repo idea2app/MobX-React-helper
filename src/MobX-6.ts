@@ -1,5 +1,5 @@
 import isEqualWith from 'lodash.isequalwith';
-import * as MobX from 'mobx';
+import { observable } from 'mobx';
 import { ComponentClass } from 'react';
 
 /**
@@ -20,16 +20,11 @@ export function observePropsState<T extends ComponentClass<any>>(
     ComponentBaseClass: T
 ) {
     class ObservedComponent extends (ComponentBaseClass as ComponentClass) {
-        constructor(props: InstanceType<ComponentClass>['props']) {
-            super(props);
-            MobX.makeObservable?.(this);
-        }
+        @observable
+        accessor observedProps = this.props;
 
-        @MobX.observable
-        observedProps = this.props;
-
-        @MobX.observable
-        observedState = {} as InstanceType<ComponentClass>['state'];
+        @observable
+        accessor observedState = {} as InstanceType<ComponentClass>['state'];
 
         componentDidMount() {
             this.observedProps = this.props;
