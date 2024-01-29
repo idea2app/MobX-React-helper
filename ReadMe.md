@@ -2,11 +2,18 @@
 
 [MobX][1] helper library for [React][2] component engine, with [TypeScript][3] Class & Decorator supports.
 
-[![MobX compatibility](https://img.shields.io/badge/Compatible-1?logo=mobx&label=MobX%204%2F5%2F6)][1]
+[![MobX compatibility](https://img.shields.io/badge/Compatible-1?logo=mobx&label=MobX%206%2F7)][1]
 [![NPM Dependency](https://img.shields.io/librariesio/github/idea2app/MobX-React-helper.svg)][4]
 [![CI & CD](https://github.com/idea2app/MobX-React-helper/actions/workflows/main.yml/badge.svg)][5]
 
 [![NPM](https://nodei.co/npm/mobx-react-helper.png?downloads=true&downloadRank=true&stars=true)][6]
+
+## Versions
+
+|  SemVer   |    status    | ES decorator |    MobX     |
+| :-------: | :----------: | :----------: | :---------: |
+| `>=0.3.0` | ✅developing |   stage-3    |  `>=6.11`   |
+| `<0.3.0`  | ❌deprecated |   stage-2    | `>=4 <6.11` |
 
 ## Usage
 
@@ -22,13 +29,15 @@ npm i mobx react \
 
 #### `tsconfig.json`
 
-Compatible with MobX 4/5/6:
+Compatible with MobX 6/7:
 
 ```json
 {
     "compilerOptions": {
-        "useDefineForClassFields": false,
-        "experimentalDecorators": true,
+        "target": "ES6",
+        "moduleResolution": "Node",
+        "useDefineForClassFields": true,
+        "experimentalDecorators": false,
         "jsx": "react-jsx"
     }
 }

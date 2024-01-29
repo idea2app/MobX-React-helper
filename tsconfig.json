@@ -1,7 +1,9 @@
 {
     "compilerOptions": {
+        "target": "ES6",
+        "moduleResolution": "Node",
         "esModuleInterop": true,
-        "experimentalDecorators": true,
+        "useDefineForClassFields": true,
         "lib": ["ES2023", "DOM", "DOM.Iterable"]
     },
     "include": ["src/*"],
