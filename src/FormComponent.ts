@@ -1,12 +1,18 @@
-import { computed, observable } from 'mobx';
-import { Component, InputHTMLAttributes, createRef } from 'react';
+import { computed, IReactionDisposer, observable, reaction } from 'mobx';
+import { Component, createRef, InputHTMLAttributes } from 'react';
 
-export interface FormComponentProps
-    extends Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
-    onChange?: (
-        value: InputHTMLAttributes<HTMLInputElement>['value'],
-        ...extra: any[]
-    ) => any;
+export type HTMLFieldElement = HTMLInputElement &
+    HTMLTextAreaElement &
+    HTMLSelectElement;
+
+export interface FormComponentProps<V = string>
+    extends Omit<
+        InputHTMLAttributes<HTMLInputElement>,
+        'defaultValue' | 'value' | 'onChange'
+    > {
+    defaultValue?: V;
+    value?: V;
+    onChange?: (value: V, ...extra: any[]) => any;
 }
 
 /**
@@ -43,9 +49,7 @@ export abstract class FormComponent<
     S = {},
     SS = any
 > extends Component<P, S, SS> {
-    ref = createRef<
-        HTMLInputElement & HTMLTextAreaElement & HTMLSelectElement
-    >();
+    ref = createRef<HTMLFieldElement>();
 
     @observable
     accessor innerValue = this.props.defaultValue;
@@ -57,17 +61,35 @@ export abstract class FormComponent<
         return this.observedProps.value ?? this.innerValue;
     }
 
-    reset = () => {
-        this.innerValue = this.props.defaultValue;
+    protected defaultValueDisposer?: IReactionDisposer;
 
-        this.props.onChange?.(this.innerValue);
+    protected changeEventDisposer?: IReactionDisposer;
+
+    useDefault = (value: P['value']) => {
+        if (value != null && !(this.innerValue != null))
+            this.innerValue = value;
     };
+    reset = () => (this.innerValue = this.props.defaultValue);
 
     componentDidMount() {
+        this.defaultValueDisposer = reaction(
+            () => this.observedProps.defaultValue,
+            this.useDefault
+        );
+        this.changeEventDisposer = reaction(
+            () => this.innerValue,
+            this.props.onChange
+        );
         this.ref.current?.form?.addEventListener('reset', this.reset);
     }
 
     componentWillUnmount() {
+        this.defaultValueDisposer?.();
+        this.defaultValueDisposer = undefined;
+
+        this.changeEventDisposer?.();
+        this.changeEventDisposer = undefined;
+
         this.ref.current?.form?.removeEventListener('reset', this.reset);
     }
 }
