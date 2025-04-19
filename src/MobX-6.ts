@@ -21,10 +21,10 @@ export function observePropsState<T extends ComponentClass<any>>(
     {}: ClassDecoratorContext
 ) {
     class ObservedComponent extends (ComponentBaseClass as ComponentClass) {
-        @observable
+        @observable.shallow
         accessor observedProps = this.props;
 
-        @observable
+        @observable.shallow
         accessor observedState = this.state;
 
         componentDidUpdate(
