@@ -1,4 +1,4 @@
-import { computed, IReactionDisposer, observable, reaction } from 'mobx';
+import { computed, IReactionDisposer, observable, reaction, toJS } from 'mobx';
 import { Component, createRef, InputHTMLAttributes } from 'react';
 
 export type HTMLFieldElement = HTMLInputElement &
@@ -18,34 +18,31 @@ export interface FormComponentProps<V = string>
 /**
  * @example
  * ```tsx
- * import { ChangeEvent } from 'react';
  * import { observer } from 'mobx-react';
  * import { FormComponent, observePropsState } from 'mobx-react-helper';
  *
  * @observer
  * @observePropsState
  * export class MyField extends FormComponent {
- *     handleChange = ({ currentTarget: { value } }: ChangeEvent<HTMLInputElement>) => {
- *         this.innerValue = value;
- *
- *         this.props.onChange?.(this.innerValue);
- *     };
- *
  *     render() {
  *         const { onChange, ...props } = this.props,
- *             { value, handleChange } = this;
+ *             { value } = this;
  *
  *         return <>
- *             <input {...props} onChange={handleChange} />
- *
- *             <output>{value}</output>
+                <input
+                    {...props}
+                    onChange={({ currentTarget: { value } }) =>
+                        (this.innerValue = value)
+                    }
+                />
+                <output>{value}</output>
  *         </>;
  *     }
  * }
  * ```
  */
 export abstract class FormComponent<
-    P extends FormComponentProps = FormComponentProps,
+    P extends FormComponentProps<any> = FormComponentProps,
     S = {},
     SS = any
 > extends Component<P, S, SS> {
@@ -57,38 +54,42 @@ export abstract class FormComponent<
     declare observedProps: P;
 
     @computed
-    get value() {
+    get value(): P['value'] {
         return this.observedProps.value ?? this.innerValue;
     }
 
-    protected defaultValueDisposer?: IReactionDisposer;
+    #defaultValueDisposer?: IReactionDisposer;
 
-    protected changeEventDisposer?: IReactionDisposer;
+    #changeEventDisposer?: IReactionDisposer;
 
-    useDefault = (value: P['value']) => {
+    #useDefault = (value: P['value']) => {
         if (value != null && !(this.innerValue != null))
             this.innerValue = value;
     };
+    emitValue = (value: P['value']) =>
+        this.observedProps.onChange?.(
+            value && typeof value === 'object' ? toJS(value) : value
+        );
     reset = () => (this.innerValue = this.props.defaultValue);
 
     componentDidMount() {
-        this.defaultValueDisposer = reaction(
+        this.#defaultValueDisposer = reaction(
             () => this.observedProps.defaultValue,
-            this.useDefault
+            this.#useDefault
         );
-        this.changeEventDisposer = reaction(
+        this.#changeEventDisposer = reaction(
             () => this.innerValue,
-            this.props.onChange
+            this.emitValue
         );
         this.ref.current?.form?.addEventListener('reset', this.reset);
     }
 
     componentWillUnmount() {
-        this.defaultValueDisposer?.();
-        this.defaultValueDisposer = undefined;
+        this.#defaultValueDisposer?.();
+        this.#defaultValueDisposer = undefined;
 
-        this.changeEventDisposer?.();
-        this.changeEventDisposer = undefined;
+        this.#changeEventDisposer?.();
+        this.#changeEventDisposer = undefined;
 
         this.ref.current?.form?.removeEventListener('reset', this.reset);
     }
