@@ -85,33 +85,32 @@ export class MyComponent extends Component<MyComponentProps, State> {
 ```tsx
 import { observer } from 'mobx-react';
 import { FormComponent, observePropsState } from 'mobx-react-helper';
-import { ChangeEvent } from 'react';
 
 @observer
 @observePropsState
 export class MyField extends FormComponent {
-    handleChange = ({
-        currentTarget: { value }
-    }: ChangeEvent<HTMLInputElement>) => {
-        this.innerValue = value;
-
-        this.props.onChange?.(this.innerValue);
-    };
-
     render() {
         const { onChange, ...props } = this.props,
             { value, handleChange } = this;
 
         return (
             <>
-                <input {...props} onChange={handleChange} />
-
+                <input
+                    {...props}
+                    onChange={({ currentTarget: { value } }) =>
+                        (this.innerValue = value)
+                    }
+                />
                 <output>{value}</output>
             </>
         );
     }
 }
 ```
+
+## User case
+
+https://github.com/idea2app/MobX-React-helper/network/dependents?dependent_type=PACKAGE
 
 [1]: https://mobx.js.org/
 [2]: https://react.dev/

@@ -25,14 +25,7 @@ export function observePropsState<T extends ComponentClass<any>>(
         accessor observedProps = this.props;
 
         @observable
-        accessor observedState = {} as InstanceType<ComponentClass>['state'];
-
-        componentDidMount() {
-            this.observedProps = this.props;
-            this.observedState = this.state;
-
-            super.componentDidMount?.();
-        }
+        accessor observedState = this.state;
 
         componentDidUpdate(
             prevProps: Readonly<InstanceType<ComponentClass>['props']>,
@@ -40,10 +33,10 @@ export function observePropsState<T extends ComponentClass<any>>(
             snapshot?: any
         ) {
             if (!isEqualProps(prevProps, this.props))
-                this.observedProps = this.props;
+                this.observedProps = { ...this.props };
 
             if (!isEqualProps(prevState, this.state))
-                this.observedState = this.state;
+                this.observedState = { ...this.state };
 
             super.componentDidUpdate?.(prevProps, prevState, snapshot);
         }
