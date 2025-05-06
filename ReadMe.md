@@ -45,33 +45,60 @@ Compatible with MobX 6/7:
 
 ### Observable Props & State
 
+#### `source/index.tsx`
+
+```tsx
+import { createRoot } from 'react-dom/client';
+
+import { MyComponent } from './Component';
+import { session, MyContext } from './store';
+
+createRoot(document.body).render(
+    <MyContext.Provider value={session}>
+        <MyComponent />
+    </MyContext.Provider>
+);
+```
+
+#### `source/store.ts`
+
+```tsx
+import { createContext } from 'react';
+
+export const session = { email: 'tech-query@idea2.app' };
+
+export const MyContext = createContext(session);
+```
+
+#### `source/Component.tsx`
+
 ```tsx
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { observePropsState } from 'mobx-react-helper';
+import { observePropsState, ObservedComponent } from 'mobx-react-helper';
 import { Component } from 'react';
 
-export interface MyComponentProps {
-    prefix: string;
-}
+import { session } from './store';
 
-interface State {
-    text: string;
-}
+export type MyComponentProps = { prefix: string };
+
+type State = { text: string };
 
 @observer
 @observePropsState
-export class MyComponent extends Component<MyComponentProps, State> {
-    state: Readonly<State> = {
-        text: ''
-    };
-
-    declare observedProps: MyComponentProps;
-    declare observedState: State;
+export class MyComponent
+    extends Component<MyComponentProps, State>
+    implements ObservedComponent<MyComponentProps, typeof session, State>
+{
+    state: Readonly<State> = { text: '' };
 
     @computed
     get decoratedText() {
-        return this.observedProps.prefix + this.observedState.text;
+        return (
+            this.observedProps.prefix +
+            this.observedState.text +
+            this.observedContext.email
+        );
     }
 
     render() {
