@@ -12,8 +12,12 @@ export const isEqualProps = (a: any, b: any) =>
         (a, b, key) =>
             ['_owner', '$$typeof'].includes(key as string) || undefined
     );
-export interface ObservedComponent<Props, Context, State, Snapshot>
-    extends Component<Props, State, Snapshot> {
+export interface ObservedComponent<
+    Props = {},
+    Context = unknown,
+    State = {},
+    Snapshot = any
+> extends Component<Props, State, Snapshot> {
     observedProps: Props;
     observedState: State;
     observedContext?: Context;
@@ -33,12 +37,12 @@ export interface ObservedComponent<Props, Context, State, Snapshot>
  *
  * type State = { text: string };
  *
+ * export interface MyComponent
+ *     extends ObservedComponent<MyComponentProps, { email: string }, State> {}
+ *
  * @observer
  * @observePropsState
- * export class MyComponent
- *     extends Component<MyComponentProps, State>
- *     implements ObservedComponent<MyComponentProps, { email: string }, State>
- * {
+ * export class MyComponent extends Component<MyComponentProps, State> {
  *     state: Readonly<State> = { text: '' };
  *
  *     @computed

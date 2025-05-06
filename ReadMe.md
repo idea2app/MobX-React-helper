@@ -84,12 +84,12 @@ export type MyComponentProps = { prefix: string };
 
 type State = { text: string };
 
+export interface MyComponent
+    extends ObservedComponent<MyComponentProps, { email: string }, State> {}
+
 @observer
 @observePropsState
-export class MyComponent
-    extends Component<MyComponentProps, State>
-    implements ObservedComponent<MyComponentProps, typeof session, State>
-{
+export class MyComponent extends Component<MyComponentProps, State> {
     state: Readonly<State> = { text: '' };
 
     @computed
