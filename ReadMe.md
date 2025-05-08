@@ -10,10 +10,11 @@
 
 ## Versions
 
-|  SemVer   |    status    | ES decorator |    MobX     |
-| :-------: | :----------: | :----------: | :---------: |
-| `>=0.3.0` | ✅developing |   stage-3    |  `>=6.11`   |
-| `<0.3.0`  | ❌deprecated |   stage-2    | `>=4 <6.11` |
+| SemVer  |    status    |      ES decorator      |    MobX     |
+| :-----: | :----------: | :--------------------: | :---------: |
+| `>=0.4` | ✅developing | stage-3 (internal use) |  `>=6.11`   |
+| `0.3.x` | ❌deprecated |        stage-3         |  `>=6.11`   |
+| `<0.3`  | ❌deprecated |        stage-2         | `>=4 <6.11` |
 
 ## Usage
 
@@ -75,8 +76,7 @@ export const MyContext = createContext(session);
 ```tsx
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { observePropsState, ObservedComponent } from 'mobx-react-helper';
-import { Component } from 'react';
+import { ObservedComponent } from 'mobx-react-helper';
 
 import { session } from './store';
 
@@ -84,12 +84,12 @@ export type MyComponentProps = { prefix: string };
 
 type State = { text: string };
 
-export interface MyComponent
-    extends ObservedComponent<MyComponentProps, { email: string }, State> {}
-
 @observer
-@observePropsState
-export class MyComponent extends Component<MyComponentProps, State> {
+export class MyComponent extends ObservedComponent<
+    MyComponentProps,
+    { email: string },
+    State
+> {
     state: Readonly<State> = { text: '' };
 
     @computed
@@ -111,10 +111,9 @@ export class MyComponent extends Component<MyComponentProps, State> {
 
 ```tsx
 import { observer } from 'mobx-react';
-import { FormComponent, observePropsState } from 'mobx-react-helper';
+import { FormComponent } from 'mobx-react-helper';
 
 @observer
-@observePropsState
 export class MyField extends FormComponent {
     render() {
         const { onChange, ...props } = this.props,
@@ -137,7 +136,9 @@ export class MyField extends FormComponent {
 
 ## User case
 
-https://github.com/idea2app/MobX-React-helper/network/dependents?dependent_type=PACKAGE
+1. Super Table & Form: https://github.com/idea2app/MobX-RESTful-table
+2. React Bootstrap extra: https://github.com/idea2app/Idea-React
+3. Open Street Map: https://github.com/idea2app/OpenReactMap
 
 [1]: https://mobx.js.org/
 [2]: https://react.dev/

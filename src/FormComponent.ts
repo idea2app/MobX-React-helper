@@ -1,5 +1,7 @@
 import { computed, IReactionDisposer, observable, reaction, toJS } from 'mobx';
-import { Component, createRef, InputHTMLAttributes } from 'react';
+import { createRef, InputHTMLAttributes } from 'react';
+
+import { ObservedComponent } from './MobX-6';
 
 export type HTMLFieldElement = HTMLInputElement &
     HTMLTextAreaElement &
@@ -19,23 +21,22 @@ export interface FormComponentProps<V = string>
  * @example
  * ```tsx
  * import { observer } from 'mobx-react';
- * import { FormComponent, observePropsState } from 'mobx-react-helper';
+ * import { FormComponent } from 'mobx-react-helper';
  *
  * @observer
- * @observePropsState
  * export class MyField extends FormComponent {
  *     render() {
  *         const { onChange, ...props } = this.props,
  *             { value } = this;
  *
  *         return <>
-                <input
-                    {...props}
-                    onChange={({ currentTarget: { value } }) =>
-                        (this.innerValue = value)
-                    }
-                />
-                <output>{value}</output>
+ *             <input
+ *                 {...props}
+ *                 onChange={({ currentTarget: { value } }) =>
+ *                     (this.innerValue = value)
+ *                 }
+ *             />
+ *             <output>{value}</output>
  *         </>;
  *     }
  * }
@@ -43,15 +44,14 @@ export interface FormComponentProps<V = string>
  */
 export abstract class FormComponent<
     P extends FormComponentProps<any> = FormComponentProps,
+    C = unknown,
     S = {},
     SS = any
-> extends Component<P, S, SS> {
+> extends ObservedComponent<P, C, S, SS> {
     ref = createRef<HTMLFieldElement>();
 
     @observable
     accessor innerValue = this.props.defaultValue;
-
-    declare observedProps: P;
 
     @computed
     get value(): P['value'] {
