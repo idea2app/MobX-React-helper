@@ -1,5 +1,6 @@
 import { computed, IReactionDisposer, observable, reaction, toJS } from 'mobx';
 import { createRef, InputHTMLAttributes } from 'react';
+import { isEmpty } from 'web-utility';
 
 import { ObservedComponent } from './MobX-6';
 
@@ -63,7 +64,7 @@ export abstract class FormComponent<
     #changeEventDisposer?: IReactionDisposer;
 
     #useDefault = (value: P['value']) => {
-        if (value != null && !(this.innerValue != null))
+        if (!isEmpty(value) && isEmpty(this.innerValue))
             this.innerValue = value;
     };
     emitValue = (value: P['value']) =>
