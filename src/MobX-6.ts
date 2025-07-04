@@ -1,5 +1,5 @@
 import isEqualWith from 'lodash.isequalwith';
-import { observable } from 'mobx';
+import { IReactionPublic, observable, reaction as watch } from 'mobx';
 import { Component } from 'react';
 
 /**
@@ -12,6 +12,67 @@ export const isEqualProps = (a: any, b: any) =>
         (a, b, key) =>
             ['_owner', '$$typeof'].includes(key as string) || undefined
     );
+
+export type ReactionExpression<I = any, O = any> = (
+    data: I,
+    reaction: IReactionPublic
+) => O;
+
+export type ReactionEffect<V> = (
+    newValue: V,
+    oldValue: V,
+    reaction: IReactionPublic
+) => any;
+
+interface ReactionItem {
+    expression: ReactionExpression;
+    effect: (...data: any[]) => any;
+}
+const reactionMap = new WeakMap<ObservedComponent, ReactionItem[]>();
+/**
+ * Method decorator of [MobX `reaction()`](https://mobx.js.org/reactions.html#reaction)
+ *
+ * (this is a clone from [WebCell `@reaction`](https://web-cell.dev/WebCell/functions/reaction.html))
+ *
+ * @example
+ * ```tsx
+ * import { observable } from 'mobx';
+ * import { observer } from 'mobx-react';
+ * import { ObservedComponent, reaction } from 'mobx-react-helper';
+ *
+ * @observer
+ * export class MyComponent extends ObservedComponent {
+ *     @observable
+ *     accessor count = 0;
+ *
+ *     @reaction(({ count }) => count)
+ *     handleCountChange(newValue: number, oldValue: number) {
+ *         console.log(`Count changed from ${oldValue} to ${newValue}`);
+ *     }
+ *
+ *     render() {
+ *        return (
+ *            <button onClick={() => this.count++}>
+ *                Up count {this.count}
+ *            </button>
+ *        );
+ *    }
+ * }
+ * ```
+ */
+export const reaction =
+    <C extends ObservedComponent, V>(expression: ReactionExpression<C, V>) =>
+    (
+        effect: ReactionEffect<V>,
+        { addInitializer }: ClassMethodDecoratorContext<C>
+    ) =>
+        addInitializer(function () {
+            const reactions = reactionMap.get(this) || [];
+
+            reactions.push({ expression, effect });
+
+            reactionMap.set(this, reactions);
+        });
 
 /**
  * @see {@link https://github.com/mobxjs/mobx/blob/main/packages/mobx-react/README.md#note-on-using-props-and-state-in-derivations}
@@ -63,6 +124,15 @@ export abstract class ObservedComponent<
 
     @observable.shallow
     accessor observedContext = this.context as Context;
+
+    #disposers = reactionMap
+        .get(this)
+        ?.map(({ expression, effect }) =>
+            watch(reaction => expression(this, reaction), effect.bind(this))
+        );
+    componentWillUnmount() {
+        this.#disposers?.forEach(disposer => disposer());
+    }
 
     componentDidUpdate(
         prevProps: Readonly<Props>,

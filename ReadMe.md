@@ -44,7 +44,7 @@ Compatible with MobX 6/7:
 }
 ```
 
-### Observable Props & State
+### Observable Props, State & Context
 
 #### `source/index.tsx`
 
@@ -103,6 +103,31 @@ export class MyComponent extends ObservedComponent<
 
     render() {
         return <p>{this.decoratedText}</p>;
+    }
+}
+```
+
+### Observable Reaction decorator
+
+```tsx
+import { observable } from 'mobx';
+import { observer } from 'mobx-react';
+import { ObservedComponent, reaction } from 'mobx-react-helper';
+
+@observer
+export class MyComponent extends ObservedComponent {
+    @observable
+    accessor count = 0;
+
+    @reaction(({ count }) => count)
+    handleCountChange(newValue: number, oldValue: number) {
+        console.log(`Count changed from ${oldValue} to ${newValue}`);
+    }
+
+    render() {
+        return (
+            <button onClick={() => this.count++}>Up count {this.count}</button>
+        );
     }
 }
 ```
