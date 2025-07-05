@@ -1,5 +1,10 @@
 import isEqualWith from 'lodash.isequalwith';
-import { IReactionPublic, observable, reaction as watch } from 'mobx';
+import {
+    IReactionDisposer,
+    IReactionPublic,
+    observable,
+    reaction as watch
+} from 'mobx';
 import { Component } from 'react';
 
 /**
@@ -34,31 +39,7 @@ const reactionMap = new WeakMap<ObservedComponent, ReactionItem[]>();
  *
  * (this is a clone from [WebCell `@reaction`](https://web-cell.dev/WebCell/functions/reaction.html))
  *
- * @example
- * ```tsx
- * import { observable } from 'mobx';
- * import { observer } from 'mobx-react';
- * import { ObservedComponent, reaction } from 'mobx-react-helper';
- *
- * @observer
- * export class MyComponent extends ObservedComponent {
- *     @observable
- *     accessor count = 0;
- *
- *     @reaction(({ count }) => count)
- *     handleCountChange(newValue: number, oldValue: number) {
- *         console.log(`Count changed from ${oldValue} to ${newValue}`);
- *     }
- *
- *     render() {
- *        return (
- *            <button onClick={() => this.count++}>
- *                Up count {this.count}
- *            </button>
- *        );
- *    }
- * }
- * ```
+ * @see {@link https://github.com/idea2app/MobX-React-helper?tab=readme-ov-file#observable-reaction-decorator}
  */
 export const reaction =
     <C extends ObservedComponent, V>(expression: ReactionExpression<C, V>) =>
@@ -76,39 +57,7 @@ export const reaction =
 
 /**
  * @see {@link https://github.com/mobxjs/mobx/blob/main/packages/mobx-react/README.md#note-on-using-props-and-state-in-derivations}
- *
- * @example
- * ```tsx
- * import { computed } from 'mobx';
- * import { observer } from 'mobx-react';
- * import { ObservedComponent } from 'mobx-react-helper';
- *
- * export type MyComponentProps = { prefix: string };
- *
- * type State = { text: string };
- *
- * @observer
- * export class MyComponent extends ObservedComponent<
- *     MyComponentProps,
- *     { email: string },
- *     State
- * > {
- *     state: Readonly<State> = { text: '' };
- *
- *     @computed
- *     get decoratedText() {
- *         return (
- *             this.observedProps.prefix +
- *             this.observedState.text +
- *             this.observedContext.email
- *         );
- *     }
- *
- *     render() {
- *         return <p>{this.decoratedText}</p>;
- *     }
- * }
- * ```
+ * @see {@link https://github.com/idea2app/MobX-React-helper?tab=readme-ov-file#observable-props-state--context}
  */
 export abstract class ObservedComponent<
     Props = {},
@@ -125,11 +74,15 @@ export abstract class ObservedComponent<
     @observable.shallow
     accessor observedContext = this.context as Context;
 
-    #disposers = reactionMap
-        .get(this)
-        ?.map(({ expression, effect }) =>
-            watch(reaction => expression(this, reaction), effect.bind(this))
-        );
+    #disposers?: IReactionDisposer[];
+
+    componentDidMount() {
+        this.#disposers = reactionMap
+            .get(this)
+            ?.map(({ expression, effect }) =>
+                watch(reaction => expression(this, reaction), effect.bind(this))
+            );
+    }
     componentWillUnmount() {
         this.#disposers?.forEach(disposer => disposer());
     }

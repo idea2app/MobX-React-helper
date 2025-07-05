@@ -19,29 +19,7 @@ export interface FormComponentProps<V = string>
 }
 
 /**
- * @example
- * ```tsx
- * import { observer } from 'mobx-react';
- * import { FormComponent } from 'mobx-react-helper';
- *
- * @observer
- * export class MyField extends FormComponent {
- *     render() {
- *         const { onChange, ...props } = this.props,
- *             { value } = this;
- *
- *         return <>
- *             <input
- *                 {...props}
- *                 onChange={({ currentTarget: { value } }) =>
- *                     (this.innerValue = value)
- *                 }
- *             />
- *             <output>{value}</output>
- *         </>;
- *     }
- * }
- * ```
+ * @see {@link https://github.com/idea2app/MobX-React-helper?tab=readme-ov-file#abstract-form-component}
  */
 export abstract class FormComponent<
     P extends FormComponentProps<any> = FormComponentProps,

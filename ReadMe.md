@@ -119,6 +119,18 @@ export class MyComponent extends ObservedComponent {
     @observable
     accessor count = 0;
 
+    componentDidMount() {
+        super.componentDidMount();
+        // Super method call is required if you have more "did mount" logic below
+        // Your logic is here...
+    }
+
+    componentWillUnmount() {
+        super.componentWillUnmount();
+        // Super method call is required if you have more "will unmount" logic below
+        // Your logic is here...
+    }
+
     @reaction(({ count }) => count)
     handleCountChange(newValue: number, oldValue: number) {
         console.log(`Count changed from ${oldValue} to ${newValue}`);
