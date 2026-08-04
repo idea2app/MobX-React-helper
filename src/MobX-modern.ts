@@ -3,9 +3,13 @@ import {
     IReactionDisposer,
     IReactionPublic,
     observable,
+    observableShallow,
     reaction as watch
 } from 'mobx';
 import { Component } from 'react';
+
+const shallow =
+    observableShallow || Reflect.get(observable, 'shallow', observable);
 
 /**
  * @see {@link https://stackoverflow.com/a/73274579}
@@ -65,13 +69,13 @@ export abstract class ObservedComponent<
     State = {},
     Snapshot = any
 > extends Component<Props, State, Snapshot> {
-    @observable.shallow
+    @shallow
     accessor observedProps = this.props;
 
-    @observable.shallow
+    @shallow
     accessor observedState = this.state;
 
-    @observable.shallow
+    @shallow
     accessor observedContext = this.context as Context;
 
     #disposers?: IReactionDisposer[];

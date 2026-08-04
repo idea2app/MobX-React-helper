@@ -182,4 +182,4 @@ export class MyField extends FormComponent {
 [3]: https://www.typescriptlang.org/
 [4]: https://libraries.io/npm/mobx-react-helper
 [5]: https://github.com/idea2app/MobX-React-helper/actions/workflows/main.yml
-[6]: https://nodei.co/npm/mobx-react-helper/
+[6]: https://npm.im/mobx-react-helper/

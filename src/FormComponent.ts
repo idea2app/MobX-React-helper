@@ -2,17 +2,16 @@ import { computed, IReactionDisposer, observable, reaction, toJS } from 'mobx';
 import { createRef, InputHTMLAttributes } from 'react';
 import { isEmpty } from 'web-utility';
 
-import { ObservedComponent } from './MobX-6';
+import { ObservedComponent } from './MobX-modern';
 
 export type HTMLFieldElement = HTMLInputElement &
     HTMLTextAreaElement &
     HTMLSelectElement;
 
-export interface FormComponentProps<V = string>
-    extends Omit<
-        InputHTMLAttributes<HTMLInputElement>,
-        'defaultValue' | 'value' | 'onChange'
-    > {
+export interface FormComponentProps<V = string> extends Omit<
+    InputHTMLAttributes<HTMLInputElement>,
+    'defaultValue' | 'value' | 'onChange'
+> {
     defaultValue?: V;
     value?: V;
     onChange?: (value: V, ...extra: any[]) => any;

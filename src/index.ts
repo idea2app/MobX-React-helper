@@ -1,2 +1,2 @@
-export * from './MobX-6';
+export * from './MobX-modern';
 export * from './FormComponent';
